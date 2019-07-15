@@ -31,8 +31,7 @@ func init() {
 }
 
 func fetchAllTodo(c *gin.Context) {
-	//c.String(http.StatusOK,"dfdfgd")
-	c.HTML(http.StatusOK,"index.html",gin.H{})
+
 	//var todos []todo
 	//db.Find(&todos)
 	//if len(todos) <= 0 {
@@ -40,14 +39,13 @@ func fetchAllTodo(c *gin.Context) {
 	//	return
 	//}
 	//
+	//comp:=false
+	//
 	//for _, item := range todos {
-	//	completed := false
-	//	if item.Completed == 1 {
-	//		completed = true
-	//	} else {
-	//		completed = false
+	//	if item.Long == ss {
+	//		comp = true
+	//		break
 	//	}
-	//	//_todos = append(_todos, transformedTodo{ID: item.ID, Title: item.Title, Completed: completed})
 	//}
 	//c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": _todos})
 }
@@ -64,20 +62,33 @@ func longtoshort(n uint)  string{
 func createTodo(c *gin.Context) {
 	var todof todo
 	todof.Long=c.PostForm("long")
+	var cou int=0
+	db.Model(&todo{}).Where("`long` LIKE ?", todof.Long).Count(&cou)
+	if cou >= 1{
+
+		db.Where("`long` = ?", c.PostForm("long")).First(&todof)
+		c.HTML(http.StatusOK, "short.html", gin.H{
+			"long" : todof.Long,
+			"sho": todof.Short,
+		})
+		return
+	}
 	db.Save(&todof)
 	todof.Short = longtoshort(todof.ID)
 	db.Save(&todof)
-	c.Redirect(http.StatusMovedPermanently,"http:localhost:8084/done")
+	c.HTML(http.StatusOK,"short.html",gin.H{
+		"sho" : todof.Short,
+		"long": todof.Long,
+	})
 }
-func doneTodo(c *gin.Context){
-	c.HTML(http.StatusOK,"short.html",gin.H{})
+func home(c *gin.Context){
+	c.HTML(http.StatusOK,"index.html",gin.H{})
 }
 func main() {
 
 	r := gin.Default()
 	r.LoadHTMLGlob("views/*")
-	r.GET("/", fetchAllTodo)
-	r.GET("/done", doneTodo)
+	r.GET("/", home)
 	r.POST("/action", createTodo)
 	r.Run(":8084")
 
