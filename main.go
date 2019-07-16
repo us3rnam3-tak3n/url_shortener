@@ -6,11 +6,13 @@ import (
 	"url_shortening/routers"
 )
 
+//To initialise database connection
 func init() {
 	//open a db connection
 	database_conn.Conn()
 }
 
+//Calls routes to do required functions
 func main() {
 	routers.Initroutes()
 }

@@ -5,6 +5,7 @@ import(
 	"url_shortening/controller"
 )
 
+//Starts server using Gin, and to call required functions
 func Initroutes(){
 	r := gin.Default()
 	r.LoadHTMLGlob("views/*")

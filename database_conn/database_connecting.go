@@ -7,6 +7,7 @@ import(
 
 var Db *gorm.DB
 
+//To establish data connection, and inmplemented error handling, if not possible to connect to the database.
 func Conn(){
 	//open a db connection
 	var err error
