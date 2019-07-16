@@ -23,8 +23,11 @@ func Home(c *gin.Context){
 	c.HTML(http.StatusOK,"index.html",gin.H{})
 }
 
+func FileHom(c *gin.Context){
+	c.HTML(http.StatusOK,"file_index.html",gin.H{})
+}
 //Gets information from Post form, and searches if it is already present in the table.
-//If not, then creates the shoert link for it, and adds the entry into the table.
+//If not, then creates the short link for it, and adds the entry into the table.
 //If already present, returns the previously stored short link.
 func CreateTodo(c *gin.Context) {
 	var todof Model.Todo
@@ -46,5 +49,18 @@ func CreateTodo(c *gin.Context) {
 		"sho" : todof.Short,
 		"long": todof.Long,
 	})
+}
+func CreateTodoUrl(d string){
+	var todof Model.Todo
+	todof.Long=d
+	var cou int=0
+	database_conn.Db.Model(&Model.Todo{}).Where("`long` LIKE ?", d).Count(&cou)
+	if cou >= 1{
+		database_conn.Db.Where("`long` = ?", d).First(&todof)
+		return
+	}
+	database_conn.Db.Save(&todof)
+	todof.Short = longtoshort(todof.ID)
+	database_conn.Db.Save(&todof)
 }
 

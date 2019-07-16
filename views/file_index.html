@@ -8,14 +8,14 @@
     <title>Document</title>
 </head>
 <body>
-<form action="/action" method="POST">
-    <fieldset>
-        <legend>URL Shortener</legend>
-        Put your link here:<br>
-        <input type="text" name="long" placeholder="Paste your link here"><br>
-        <input type="submit" value="Submit">
-    </fieldset>
-    <a href="/file">Or choose a file instead...</a>
-</form>
+<div class="container">
+    <h2> Upload your json file containing URLs to get short links</h2>
+    <form method="POST" enctype="multipart/form-data" >
+        <br>
+        <input type="file" name="file" accept=".json">
+        <br><br>
+        <input type="submit">
+    </form>
+</div>
 </body>
 </html>
